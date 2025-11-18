@@ -223,15 +223,16 @@
                             Download CSV
                         </button>
                     </div>
-                    <!-- Removed max-h-[500px] and custom-scrollbar to show entire table -->
+                    
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
+                            <!-- COMPACT HEADER FOR MOBILE -->
                             <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-900/50">
                                 <tr>
-                                    <th class="px-6 py-3">Age</th>
-                                    <th class="px-6 py-3">Net Worth</th>
-                                    <th class="px-6 py-3 text-gray-400">Coast Req.</th>
-                                    <th class="px-6 py-3">Status</th>
+                                    <th class="px-2 py-2 md:px-6 md:py-3">Age</th>
+                                    <th class="px-2 py-2 md:px-6 md:py-3">Net Worth</th>
+                                    <th class="px-2 py-2 md:px-6 md:py-3 text-gray-400">Coast Req.</th>
+                                    <th class="px-2 py-2 md:px-6 md:py-3">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="resultsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -587,13 +588,14 @@
         }
 
         function renderTable(data) {
+            // UPDATED FOR MOBILE COMPACTNESS: px-2 py-2 on mobile, standard on desktop
             display.tableBody.innerHTML = data.map(row => `
                 <tr class="group hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${row.status === 'Coasting' ? 'bg-green-50/50 dark:bg-green-900/10' : ''}">
-                    <td class="px-6 py-3 font-medium text-gray-900 dark:text-gray-100">${row.age}</td>
-                    <td class="px-6 py-3 font-mono font-semibold text-brand-600 dark:text-brand-400">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.balance)}</td>
-                    <td class="px-6 py-3 font-mono text-gray-500">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.coastReq)}</td>
-                    <td class="px-6 py-3">
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide
+                    <td class="px-2 py-2 md:px-6 md:py-3 font-medium text-gray-900 dark:text-gray-100">${row.age}</td>
+                    <td class="px-2 py-2 md:px-6 md:py-3 font-mono font-semibold text-brand-600 dark:text-brand-400 text-xs md:text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.balance)}</td>
+                    <td class="px-2 py-2 md:px-6 md:py-3 font-mono text-gray-500 text-xs md:text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.coastReq)}</td>
+                    <td class="px-2 py-2 md:px-6 md:py-3">
+                        <span class="px-1.5 py-0.5 md:px-2.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide whitespace-nowrap
                             ${row.status === 'FI Reached' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200' : 
                               row.status === 'Coasting' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 
                               'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'}">
