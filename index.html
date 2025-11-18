@@ -1,184 +1,684 @@
-<!DOCTYPE HTML>
-<!--
-	Stellar by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Stellar by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coast FIRE Pro Calculator</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            margin-top: -6px; 
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 2px;
+        }
+        .dark input[type=range]::-webkit-slider-runnable-track {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans">
 
-				<!-- Header -->
-					<header id="header" class="alt">
-						<span class="logo"><img src="images/logo.svg" alt="" /></span>
-						<h1>Stellar</h1>
-						<p>Just another free, fully responsive site template<br />
-						built by <a href="https://twitter.com/ajlkn">@ajlkn</a> for <a href="https://html5up.net">HTML5 UP</a>.</p>
-					</header>
+    <!-- Navbar -->
+    <nav class="w-full bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="bg-brand-500 text-white p-1.5 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">Coast<span class="text-brand-500">FIRE</span> <span class="text-xs font-normal bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-500 dark:text-gray-300 ml-2">Pro</span></h1>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-500 dark:text-gray-400">
+                <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moonIcon" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 24.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+        </div>
+    </nav>
 
-				<!-- Nav -->
-					<nav id="nav">
-						<ul>
-							<li><a href="#intro" class="active">Introduction</a></li>
-							<li><a href="#first">First Section</a></li>
-							<li><a href="#second">Second Section</a></li>
-							<li><a href="#cta">Get Started</a></li>
-						</ul>
-					</nav>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
+            
+            <!-- LEFT COLUMN (Inputs) -->
+            <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-24 h-fit">
+                
+                <!-- Summary Card -->
+                <div class="bg-brand-600 text-white rounded-xl shadow-xl p-6 border border-brand-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+                    
+                    <h3 class="text-brand-100 text-xs font-bold uppercase tracking-widest mb-1">Projected Coast Age</h3>
+                    <div class="flex items-baseline gap-2">
+                        <div class="text-5xl font-bold" id="coastAgeDisplay">--</div>
+                        <span class="text-brand-200 text-lg">years old</span>
+                    </div>
 
-				<!-- Main -->
-					<div id="main">
+                    <div class="mt-4 pt-4 border-t border-brand-500/50 flex justify-between items-center">
+                        <div>
+                            <p class="text-brand-100 text-xs uppercase tracking-wide mb-1">Time until Coasting</p>
+                            <div class="text-lg font-semibold" id="timeRemainingDisplay">--</div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-brand-100 text-xs uppercase tracking-wide mb-1">Coast Goal</p>
+                            <div class="text-lg font-semibold" id="coastNumberDisplay">--</div>
+                        </div>
+                    </div>
+                </div>
 
-						<!-- Introduction -->
-							<section id="intro" class="main">
-								<div class="spotlight">
-									<div class="content">
-										<header class="major">
-											<h2>Ipsum sed adipiscing</h2>
-										</header>
-										<p>Sed lorem ipsum dolor sit amet nullam consequat feugiat consequat magna
-										adipiscing magna etiam amet veroeros. Lorem ipsum dolor tempus sit cursus.
-										Tempus nisl et nullam lorem ipsum dolor sit amet aliquam.</p>
-										<ul class="actions">
-											<li><a href="generic.html" class="button">Learn More</a></li>
-										</ul>
-									</div>
-									<span class="image"><img src="images/pic01.jpg" alt="" /></span>
-								</div>
-							</section>
+                <!-- INPUTS FORM -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700 space-y-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="text-lg font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                            Parameters
+                        </h2>
+                    </div>
+                    
+                    <!-- FIRE Goal -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">FIRE Goal ($)</label>
+                            <input type="number" id="fireGoal" value="1500000" class="w-28 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm font-mono">
+                        </div>
+                        <input type="range" id="fireGoalRange" min="100000" max="5000000" step="50000" value="1500000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                    </div>
 
-						<!-- First Section -->
-							<section id="first" class="main special">
-								<header class="major">
-									<h2>Magna veroeros</h2>
-								</header>
-								<ul class="features">
-									<li>
-										<span class="icon solid major style1 fa-code"></span>
-										<h3>Ipsum consequat</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-									</li>
-									<li>
-										<span class="icon major style3 fa-copy"></span>
-										<h3>Amed sed feugiat</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-									</li>
-									<li>
-										<span class="icon major style5 fa-gem"></span>
-										<h3>Dolor nullam</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
-									</li>
-								</ul>
-								<footer class="major">
-									<ul class="actions special">
-										<li><a href="generic.html" class="button">Learn More</a></li>
-									</ul>
-								</footer>
-							</section>
+                    <!-- Age Inputs Grid -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Age</label>
+                                <input type="number" id="currentAge" value="30" class="w-16 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm">
+                            </div>
+                            <input type="range" id="currentAgeRange" min="18" max="80" value="30" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Retire At</label>
+                                <input type="number" id="retireAge" value="60" class="w-16 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm">
+                            </div>
+                            <input type="range" id="retireAgeRange" min="30" max="90" value="60" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                        </div>
+                    </div>
 
-						<!-- Second Section -->
-							<section id="second" class="main special">
-								<header class="major">
-									<h2>Ipsum consequat</h2>
-									<p>Donec imperdiet consequat consequat. Suspendisse feugiat congue<br />
-									posuere. Nulla massa urna, fermentum eget quam aliquet.</p>
-								</header>
-								<ul class="statistics">
-									<li class="style1">
-										<span class="icon solid fa-code-branch"></span>
-										<strong>5,120</strong> Etiam
-									</li>
-									<li class="style2">
-										<span class="icon fa-folder-open"></span>
-										<strong>8,192</strong> Magna
-									</li>
-									<li class="style3">
-										<span class="icon solid fa-signal"></span>
-										<strong>2,048</strong> Tempus
-									</li>
-									<li class="style4">
-										<span class="icon solid fa-laptop"></span>
-										<strong>4,096</strong> Aliquam
-									</li>
-									<li class="style5">
-										<span class="icon fa-gem"></span>
-										<strong>1,024</strong> Nullam
-									</li>
-								</ul>
-								<p class="content">Nam elementum nisl et mi a commodo porttitor. Morbi sit amet nisl eu arcu faucibus hendrerit vel a risus. Nam a orci mi, elementum ac arcu sit amet, fermentum pellentesque et purus. Integer maximus varius lorem, sed convallis diam accumsan sed. Etiam porttitor placerat sapien, sed eleifend a enim pulvinar faucibus semper quis ut arcu. Ut non nisl a mollis est efficitur vestibulum. Integer eget purus nec nulla mattis et accumsan ut magna libero. Morbi auctor iaculis porttitor. Sed ut magna ac risus et hendrerit scelerisque. Praesent eleifend lacus in lectus aliquam porta. Cras eu ornare dui curabitur lacinia.</p>
-								<footer class="major">
-									<ul class="actions special">
-										<li><a href="generic.html" class="button">Learn More</a></li>
-									</ul>
-								</footer>
-							</section>
+                    <!-- Current Net Worth -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Net Worth ($)</label>
+                            <input type="number" id="currentWorth" value="100000" class="w-28 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm font-mono">
+                        </div>
+                        <input type="range" id="currentWorthRange" min="0" max="1000000" step="1000" value="100000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                    </div>
 
-						<!-- Get Started -->
-							<section id="cta" class="main special">
-								<header class="major">
-									<h2>Congue imperdiet</h2>
-									<p>Donec imperdiet consequat consequat. Suspendisse feugiat congue<br />
-									posuere. Nulla massa urna, fermentum eget quam aliquet.</p>
-								</header>
-								<footer class="major">
-									<ul class="actions special">
-										<li><a href="generic.html" class="button primary">Get Started</a></li>
-										<li><a href="generic.html" class="button">Learn More</a></li>
-									</ul>
-								</footer>
-							</section>
+                    <!-- Monthly Savings -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Monthly Savings ($)</label>
+                            <input type="number" id="monthlySavings" value="2500" class="w-28 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm font-mono">
+                        </div>
+                        <input type="range" id="monthlySavingsRange" min="0" max="20000" step="50" value="2500" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                    </div>
 
-					</div>
+                    <hr class="border-gray-200 dark:border-gray-700">
 
-				<!-- Footer -->
-					<footer id="footer">
-						<section>
-							<h2>Aliquam sed mauris</h2>
-							<p>Sed lorem ipsum dolor sit amet et nullam consequat feugiat consequat magna adipiscing tempus etiam dolore veroeros. eget dapibus mauris. Cras aliquet, nisl ut viverra sollicitudin, ligula erat egestas velit, vitae tincidunt odio.</p>
-							<ul class="actions">
-								<li><a href="generic.html" class="button">Learn More</a></li>
-							</ul>
-						</section>
-						<section>
-							<h2>Etiam feugiat</h2>
-							<dl class="alt">
-								<dt>Address</dt>
-								<dd>1234 Somewhere Road &bull; Nashville, TN 00000 &bull; USA</dd>
-								<dt>Phone</dt>
-								<dd>(000) 000-0000 x 0000</dd>
-								<dt>Email</dt>
-								<dd><a href="#">information@untitled.tld</a></dd>
-							</dl>
-							<ul class="icons">
-								<li><a href="#" class="icon brands fa-twitter alt"><span class="label">Twitter</span></a></li>
-								<li><a href="#" class="icon brands fa-facebook-f alt"><span class="label">Facebook</span></a></li>
-								<li><a href="#" class="icon brands fa-instagram alt"><span class="label">Instagram</span></a></li>
-								<li><a href="#" class="icon brands fa-github alt"><span class="label">GitHub</span></a></li>
-								<li><a href="#" class="icon brands fa-dribbble alt"><span class="label">Dribbble</span></a></li>
-							</ul>
-						</section>
-						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-					</footer>
+                    <!-- Inflation Logic -->
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Return Mode</label>
+                            <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                                <button id="modeReal" class="text-xs px-3 py-1 rounded-md bg-white dark:bg-gray-600 shadow-sm transition-all">Real</button>
+                                <button id="modeNominal" class="text-xs px-3 py-1 rounded-md text-gray-500 dark:text-gray-400 transition-all">Nominal</button>
+                            </div>
+                        </div>
 
-			</div>
+                        <!-- Annual Return -->
+                        <div class="mb-3">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Rate of Return (%)</label>
+                                <input type="number" id="annualReturn" value="7" step="0.1" class="w-16 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm">
+                            </div>
+                            <input type="range" id="annualReturnRange" min="1" max="15" step="0.1" value="7" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
+                        </div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+                        <!-- Inflation Rate (Hidden by default) -->
+                        <div id="inflationContainer" class="hidden opacity-0 transition-opacity duration-300">
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-bold uppercase text-gray-500 dark:text-gray-400">Inflation Rate (%)</label>
+                                <input type="number" id="inflationRate" value="3" step="0.1" class="w-16 text-right bg-transparent border-b border-gray-300 dark:border-gray-600 focus:border-brand-500 outline-none text-sm">
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-1">We will calculate Real Return: ((1+Return)/(1+Inflation)) - 1</p>
+                        </div>
+                    </div>
+                </div>
 
-	</body>
+                <!-- Smart Suggestions -->
+                <div class="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-800 rounded-xl p-5">
+                    <h4 class="text-sm font-bold text-yellow-800 dark:text-yellow-500 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Accelerate Your Goal
+                    </h4>
+                    <div id="suggestionsBox" class="space-y-2 text-sm text-yellow-900 dark:text-yellow-100">
+                        <!-- JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (Chart & Table) -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Chart Container -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Visual Projection</h3>
+                    </div>
+                    <div class="h-[400px] w-full relative">
+                        <canvas id="fireChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex justify-between items-center">
+                        <h3 class="font-semibold">Yearly Breakdown</h3>
+                        <button onclick="downloadCSV()" class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-white bg-gray-800 dark:bg-gray-700 rounded hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download CSV
+                        </button>
+                    </div>
+                    <!-- Removed max-h-[500px] and custom-scrollbar to show entire table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-900/50">
+                                <tr>
+                                    <th class="px-6 py-3">Age</th>
+                                    <th class="px-6 py-3">Net Worth</th>
+                                    <th class="px-6 py-3 text-gray-400">Coast Req.</th>
+                                    <th class="px-6 py-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                <!-- JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Definition Footer -->
+                 <div class="bg-indigo-50 dark:bg-gray-800 border-l-4 border-indigo-500 p-6 rounded-r-xl mt-8">
+                    <h3 class="text-lg font-bold text-indigo-900 dark:text-white mb-2">What is Coast FIRE?</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm">
+                        <strong>Coast FIRE</strong> is the point where you have invested enough money that, without contributing another penny, your portfolio will grow to support your retirement due to compound interest alone. 
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- DOM Handling & Syncing Sliders ---
+        const elementIds = ['fireGoal', 'currentAge', 'retireAge', 'currentWorth', 'monthlySavings', 'annualReturn'];
+        
+        // Create a map of elements for easy access
+        const els = {};
+        elementIds.forEach(id => {
+            els[id] = document.getElementById(id);
+            els[id + 'Range'] = document.getElementById(id + 'Range');
+            
+            // Sync Number -> Slider
+            els[id].addEventListener('input', (e) => {
+                els[id + 'Range'].value = e.target.value;
+                updateApp();
+            });
+            
+            // Sync Slider -> Number
+            els[id + 'Range'].addEventListener('input', (e) => {
+                els[id].value = e.target.value;
+                updateApp();
+            });
+        });
+
+        const inflationInput = document.getElementById('inflationRate');
+        inflationInput.addEventListener('input', updateApp);
+
+        // Mode Toggle Logic
+        let isNominal = false;
+        const btnReal = document.getElementById('modeReal');
+        const btnNominal = document.getElementById('modeNominal');
+        const inflationContainer = document.getElementById('inflationContainer');
+
+        function setMode(nominal) {
+            isNominal = nominal;
+            if (isNominal) {
+                btnNominal.classList.replace('text-gray-500', 'bg-white');
+                if(document.documentElement.classList.contains('dark')) btnNominal.classList.replace('bg-white', 'bg-gray-600');
+                btnNominal.classList.add('shadow-sm');
+                
+                btnReal.classList.remove('bg-white', 'bg-gray-600', 'shadow-sm', 'text-gray-900');
+                btnReal.classList.add('text-gray-500');
+
+                inflationContainer.classList.remove('hidden');
+                setTimeout(() => inflationContainer.classList.remove('opacity-0'), 10);
+            } else {
+                btnReal.classList.replace('text-gray-500', 'bg-white');
+                if(document.documentElement.classList.contains('dark')) btnReal.classList.replace('bg-white', 'bg-gray-600');
+                btnReal.classList.add('shadow-sm');
+
+                btnNominal.classList.remove('bg-white', 'bg-gray-600', 'shadow-sm');
+                btnNominal.classList.add('text-gray-500');
+
+                inflationContainer.classList.add('opacity-0');
+                setTimeout(() => inflationContainer.classList.add('hidden'), 300);
+            }
+            updateApp();
+        }
+
+        btnReal.addEventListener('click', () => setMode(false));
+        btnNominal.addEventListener('click', () => setMode(true));
+
+        // --- Core Logic ---
+        let currentResultData = []; // Store for CSV export
+
+        function calculateProjections(customVals = null) {
+            const goal = customVals ? customVals.goal : parseFloat(els.fireGoal.value);
+            const age = customVals ? customVals.age : parseFloat(els.currentAge.value);
+            const retireAge = customVals ? customVals.retireAge : parseFloat(els.retireAge.value);
+            const startWorth = customVals ? customVals.startWorth : parseFloat(els.currentWorth.value);
+            const monthly = customVals ? customVals.monthly : parseFloat(els.monthlySavings.value);
+            
+            let rawRate = customVals ? customVals.rate : parseFloat(els.annualReturn.value) / 100;
+            
+            // Adjust Rate if Nominal Mode is Active
+            if (isNominal && !customVals) { 
+                const infRate = parseFloat(inflationInput.value) / 100;
+                // Fisher Equation: (1 + nominal) / (1 + inflation) - 1
+                rawRate = ((1 + rawRate) / (1 + infRate)) - 1;
+            }
+
+            const yearsToGrow = retireAge - age;
+            const data = [];
+            
+            let coastFireAge = null;
+            let coastNumberAtCurrent = 0;
+            let preciseTimeYears = null; // For displaying years + months
+            
+            let currentBalance = startWorth;
+
+            // To help calculate intersection, we track previous state
+            let prevBalance = startWorth;
+            let prevCoastNumber = 0;
+
+            for (let i = 0; i <= yearsToGrow; i++) {
+                const currentAge = age + i;
+                const remainingYears = retireAge - currentAge;
+                
+                // Coast Requirement Formula
+                const coastNumber = goal / Math.pow(1 + rawRate, remainingYears);
+
+                if (i === 0) {
+                    coastNumberAtCurrent = coastNumber;
+                    prevCoastNumber = coastNumber; // Set initial
+                }
+
+                let status = "Saving";
+                
+                // Check if we are coasting
+                if (currentBalance >= coastNumber) {
+                    status = "Coasting";
+                    
+                    if (coastFireAge === null) {
+                        coastFireAge = currentAge;
+                        
+                        // Calculate Precise Time (Interpolation)
+                        // Previous year: prevBalance vs prevCoastNumber (we were below)
+                        // Current year: currentBalance vs coastNumber (we are above)
+                        // We want to find fraction 'f' where:
+                        // (prevBalance + f*growth) = (prevCoastNumber + f*shrink) 
+                        // Simplification: Time fraction = GapPrev / (GapPrev - GapCurr)
+                        
+                        if (i === 0) {
+                            preciseTimeYears = 0;
+                        } else {
+                            const gapPrev = prevCoastNumber - prevBalance;
+                            const gapCurr = coastNumber - currentBalance; // This is negative or 0
+                            const totalMove = gapPrev - gapCurr;
+                            
+                            const fraction = gapPrev / totalMove;
+                            preciseTimeYears = (i - 1) + fraction;
+                        }
+                    }
+                }
+
+                if (currentBalance >= goal) {
+                    status = "FI Reached";
+                }
+
+                data.push({
+                    age: currentAge,
+                    balance: currentBalance,
+                    coastReq: coastNumber,
+                    status: status
+                });
+
+                // Prepare for next year
+                prevBalance = currentBalance;
+                prevCoastNumber = coastNumber;
+                
+                currentBalance = (currentBalance * (1 + rawRate)) + (monthly * 12);
+            }
+
+            return { 
+                data, 
+                coastFireAge, 
+                goal, 
+                coastNumberAtCurrent, 
+                preciseTimeYears,
+                inputs: {age, monthly, rawRate} 
+            };
+        }
+
+        // --- Suggestions Engine ---
+        function generateSuggestions(baseResult) {
+            const box = document.getElementById('suggestionsBox');
+            const currentCoast = baseResult.coastFireAge;
+            const currentInputs = baseResult.inputs;
+
+            if (!currentCoast) {
+                box.innerHTML = `<p class="opacity-70">You are not on track to Coast FIRE before retirement. Increase savings or extend timeline.</p>`;
+                return;
+            }
+
+            if (currentCoast <= parseFloat(els.currentAge.value)) {
+                box.innerHTML = `<p class="text-green-600 dark:text-green-400 font-medium">You are Coast FIRE ready! No further contributions needed to hit goal.</p>`;
+                return;
+            }
+
+            // Simulation 1: +$500/mo
+            const simMoney = calculateProjections({
+                goal: parseFloat(els.fireGoal.value),
+                age: parseFloat(els.currentAge.value),
+                retireAge: parseFloat(els.retireAge.value),
+                startWorth: parseFloat(els.currentWorth.value),
+                monthly: currentInputs.monthly + 500, // INCREASE
+                rate: currentInputs.rawRate // Keep calculated rate
+            });
+
+            // Simulation 2: +$1000/mo
+            const simMoneyHigh = calculateProjections({
+                goal: parseFloat(els.fireGoal.value),
+                age: parseFloat(els.currentAge.value),
+                retireAge: parseFloat(els.retireAge.value),
+                startWorth: parseFloat(els.currentWorth.value),
+                monthly: currentInputs.monthly + 1000, // INCREASE
+                rate: currentInputs.rawRate
+            });
+
+            let html = '';
+            
+            const savedYears500 = currentCoast - simMoney.coastFireAge;
+            if (savedYears500 > 0) {
+                html += `
+                <div class="flex justify-between items-center border-b border-yellow-200 dark:border-yellow-800 pb-2 last:border-0 last:pb-0">
+                    <span>Increase savings by <strong>$500/mo</strong></span>
+                    <span class="font-bold text-green-600 dark:text-green-400 text-xs bg-green-100 dark:bg-green-900 px-2 py-1 rounded">
+                        ${savedYears500} Year${savedYears500 > 1 ? 's' : ''} Faster
+                    </span>
+                </div>`;
+            }
+
+            const savedYears1000 = currentCoast - simMoneyHigh.coastFireAge;
+            if (savedYears1000 > savedYears500) {
+                 html += `
+                <div class="flex justify-between items-center pt-2">
+                    <span>Increase savings by <strong>$1,000/mo</strong></span>
+                    <span class="font-bold text-green-600 dark:text-green-400 text-xs bg-green-100 dark:bg-green-900 px-2 py-1 rounded">
+                        ${savedYears1000} Year${savedYears1000 > 1 ? 's' : ''} Faster
+                    </span>
+                </div>`;
+            }
+
+            if (html === '') {
+                html = '<p class="opacity-70">Increasing contributions slightly won\'t shift the timeline much this close to the goal. Try increasing Net Worth.</p>';
+            }
+
+            box.innerHTML = html;
+        }
+
+        // --- Visuals ---
+        let chartInstance = null;
+        const display = {
+            coastAge: document.getElementById('coastAgeDisplay'),
+            timeRemaining: document.getElementById('timeRemainingDisplay'),
+            coastNum: document.getElementById('coastNumberDisplay'),
+            tableBody: document.getElementById('resultsTableBody')
+        };
+
+        function formatMoney(amount) {
+            if (amount >= 1000000) return '$' + (amount / 1000000).toFixed(2) + 'M';
+            if (amount >= 1000) return '$' + (amount / 1000).toFixed(0) + 'k';
+            return '$' + amount.toFixed(0);
+        }
+
+        function formatTimeRemaining(decimalYears) {
+            if (decimalYears <= 0) return "Goal Reached!";
+            
+            const years = Math.floor(decimalYears);
+            const months = Math.round((decimalYears - years) * 12);
+            
+            if (years === 0 && months === 0) return "Less than a month";
+            if (years === 0) return `${months} Month${months !== 1 ? 's' : ''}`;
+            if (months === 0) return `${years} Year${years !== 1 ? 's' : ''}`;
+            
+            return `${years} Year${years !== 1 ? 's' : ''}, ${months} Mo`;
+        }
+
+        function renderChart(res) {
+            const ctx = document.getElementById('fireChart').getContext('2d');
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#9ca3af' : '#4b5563';
+            const gridColor = isDark ? '#374151' : '#e5e7eb';
+
+            const labels = res.data.map(d => `Age ${d.age}`);
+            const dataWorth = res.data.map(d => d.balance);
+            const dataCoast = res.data.map(d => d.coastReq);
+            const dataGoal = res.data.map(() => res.goal);
+
+            if (chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Net Worth',
+                            data: dataWorth,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: 'Coast Threshold',
+                            data: dataCoast,
+                            borderColor: '#10b981',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.4,
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        {
+                            label: 'FIRE Goal',
+                            data: dataGoal,
+                            borderColor: '#ef4444',
+                            borderWidth: 1,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { labels: { color: textColor, usePointStyle: true } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    return `${ctx.dataset.label}: ${formatMoney(ctx.parsed.y)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: textColor, maxTicksLimit: 10 }
+                        },
+                        y: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, callback: val => formatMoney(val) }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable(data) {
+            display.tableBody.innerHTML = data.map(row => `
+                <tr class="group hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${row.status === 'Coasting' ? 'bg-green-50/50 dark:bg-green-900/10' : ''}">
+                    <td class="px-6 py-3 font-medium text-gray-900 dark:text-gray-100">${row.age}</td>
+                    <td class="px-6 py-3 font-mono font-semibold text-brand-600 dark:text-brand-400">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.balance)}</td>
+                    <td class="px-6 py-3 font-mono text-gray-500">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.coastReq)}</td>
+                    <td class="px-6 py-3">
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide
+                            ${row.status === 'FI Reached' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200' : 
+                              row.status === 'Coasting' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 
+                              'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'}">
+                            ${row.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- CSV Export ---
+        window.downloadCSV = function() {
+            if (!currentResultData || currentResultData.length === 0) return;
+            
+            // Headers
+            const headers = ["Age", "Net Worth", "Coast Requirement", "Status"];
+            
+            // Rows
+            const rows = currentResultData.map(row => [
+                row.age,
+                row.balance.toFixed(2),
+                row.coastReq.toFixed(2),
+                row.status
+            ].join(","));
+            
+            // Combine
+            const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows].join("\n");
+            
+            // Download Link
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "coast_fire_projections.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // --- Main App Update ---
+        function updateApp() {
+            const res = calculateProjections();
+            currentResultData = res.data;
+            
+            // Update Header Display
+            if (res.coastFireAge) {
+                display.coastAge.innerText = res.coastFireAge;
+                
+                // Use precise time calculation if available
+                if (res.preciseTimeYears !== null) {
+                     display.timeRemaining.innerText = formatTimeRemaining(res.preciseTimeYears);
+                } else {
+                     display.timeRemaining.innerText = "Goal Reached";
+                }
+
+            } else {
+                display.coastAge.innerText = "N/A";
+                display.timeRemaining.innerText = "Never";
+            }
+            display.coastNum.innerText = formatMoney(res.coastNumberAtCurrent);
+
+            renderTable(res.data);
+            renderChart(res);
+            generateSuggestions(res);
+        }
+
+        // --- Theme Init ---
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                document.getElementById('sunIcon').classList.add('hidden');
+                document.getElementById('moonIcon').classList.remove('hidden');
+            } else {
+                html.classList.add('dark');
+                html.classList.remove('light');
+                document.getElementById('sunIcon').classList.remove('hidden');
+                document.getElementById('moonIcon').classList.add('hidden');
+            }
+            updateApp(); // Re-render chart for color changes
+        });
+
+        // Initial Trigger
+        updateApp();
+
+    </script>
+</body>
 </html>
