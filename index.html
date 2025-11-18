@@ -227,12 +227,17 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
                             <!-- COMPACT HEADER FOR MOBILE -->
+                            <!-- Status Header: Text on Desktop, Flag Icon on Mobile -->
                             <thead class="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-900/50">
                                 <tr>
-                                    <th class="px-2 py-2 md:px-6 md:py-3">Age</th>
-                                    <th class="px-2 py-2 md:px-6 md:py-3">Net Worth</th>
-                                    <th class="px-2 py-2 md:px-6 md:py-3 text-gray-400">Coast Req.</th>
-                                    <th class="px-2 py-2 md:px-6 md:py-3">Status</th>
+                                    <th class="px-1 py-2 md:px-6 md:py-3">Age</th>
+                                    <th class="px-1 py-2 md:px-6 md:py-3">Net Worth</th>
+                                    <th class="px-1 py-2 md:px-6 md:py-3 text-gray-400">Coast Req.</th>
+                                    <th class="px-1 py-2 md:px-6 md:py-3 w-1 text-center">
+                                        <span class="hidden md:inline">Status</span>
+                                        <!-- Icon for mobile header to save space -->
+                                        <svg class="w-4 h-4 md:hidden mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-8a2 2 0 012-2h14a2 2 0 012 2v8M3 21h18M5 21v-8a2 2 0 012-2h10a2 2 0 012 2v8m-9-3h2"></path></svg>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="resultsTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -588,22 +593,41 @@
         }
 
         function renderTable(data) {
-            // UPDATED FOR MOBILE COMPACTNESS: px-2 py-2 on mobile, standard on desktop
-            display.tableBody.innerHTML = data.map(row => `
+            display.tableBody.innerHTML = data.map(row => {
+                let mobileIcon = '';
+                let statusClass = '';
+
+                if (row.status === 'FI Reached') {
+                    // Purple Check/Star
+                    statusClass = 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200';
+                    mobileIcon = `<svg class="w-4 h-4 text-purple-600 dark:text-purple-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                } else if (row.status === 'Coasting') {
+                    // Green Trend Up
+                    statusClass = 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200';
+                    mobileIcon = `<svg class="w-4 h-4 text-green-600 dark:text-green-300 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>`;
+                } else {
+                    // Saving (Gray Dot/Circle)
+                    statusClass = 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300';
+                    mobileIcon = `<div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 mx-auto"></div>`;
+                }
+
+                return `
                 <tr class="group hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${row.status === 'Coasting' ? 'bg-green-50/50 dark:bg-green-900/10' : ''}">
-                    <td class="px-2 py-2 md:px-6 md:py-3 font-medium text-gray-900 dark:text-gray-100">${row.age}</td>
-                    <td class="px-2 py-2 md:px-6 md:py-3 font-mono font-semibold text-brand-600 dark:text-brand-400 text-xs md:text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.balance)}</td>
-                    <td class="px-2 py-2 md:px-6 md:py-3 font-mono text-gray-500 text-xs md:text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.coastReq)}</td>
-                    <td class="px-2 py-2 md:px-6 md:py-3">
-                        <span class="px-1.5 py-0.5 md:px-2.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide whitespace-nowrap
-                            ${row.status === 'FI Reached' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200' : 
-                              row.status === 'Coasting' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 
-                              'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'}">
+                    <td class="px-1 py-2 md:px-6 md:py-3 font-medium text-gray-900 dark:text-gray-100 text-center">${row.age}</td>
+                    <td class="px-1 py-2 md:px-6 md:py-3 font-mono font-semibold text-brand-600 dark:text-brand-400 text-xs md:text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.balance)}</td>
+                    <td class="px-1 py-2 md:px-6 md:py-3 font-mono text-gray-500 text-xs md:text-sm">${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(row.coastReq)}</td>
+                    <td class="px-1 py-2 md:px-6 md:py-3 w-1 whitespace-nowrap">
+                        <!-- Desktop: Full Pill -->
+                        <span class="hidden md:inline-block px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide whitespace-nowrap ${statusClass}">
                             ${row.status}
+                        </span>
+                        <!-- Mobile: Icon Only -->
+                        <span class="md:hidden block">
+                            ${mobileIcon}
                         </span>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         // --- CSV Export ---
